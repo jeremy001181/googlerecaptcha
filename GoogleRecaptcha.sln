@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleRecaptcha", "src\GoogleRecaptcha\GoogleRecaptcha.csproj", "{5FA9365D-9537-4E84-95B4-5F8825D226BD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2D815E17-7D98-4596-9ED8-1247D833F92F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{30E0D391-2F48-4C2B-ADAA-1E8D1200C88B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "demo", "demo", "{91CB078B-0991-4576-B863-B256942624E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleRecaptcha.UnitTests", "test\GoogleRecaptcha.UnitTests\GoogleRecaptcha.UnitTests.csproj", "{3F9EFEE4-5772-48F5-AE5D-8DD9E90B71B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoogleRecaptcha.AcceptanceTests", "test\GoogleRecaptcha.AcceptanceTests\GoogleRecaptcha.AcceptanceTests.csproj", "{AA01E1CB-C31C-48B0-8CAA-4092F81AFCE0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{2A665FF9-BDE4-4570-9BD3-5E47E892440F}"
+	ProjectSection(SolutionItems) = preProject
+		build\build.ps1 = build\build.ps1
+		build\google-recaptcha.msbuild = build\google-recaptcha.msbuild
+		build\NuGet.Config = build\NuGet.Config
+		build\nuget.exe = build\nuget.exe
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcApplication", "demo\MvcApplication\MvcApplication.csproj", "{E4E23508-4D83-4C68-B995-EDF868D32809}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5FA9365D-9537-4E84-95B4-5F8825D226BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FA9365D-9537-4E84-95B4-5F8825D226BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FA9365D-9537-4E84-95B4-5F8825D226BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FA9365D-9537-4E84-95B4-5F8825D226BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F9EFEE4-5772-48F5-AE5D-8DD9E90B71B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F9EFEE4-5772-48F5-AE5D-8DD9E90B71B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F9EFEE4-5772-48F5-AE5D-8DD9E90B71B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F9EFEE4-5772-48F5-AE5D-8DD9E90B71B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA01E1CB-C31C-48B0-8CAA-4092F81AFCE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA01E1CB-C31C-48B0-8CAA-4092F81AFCE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA01E1CB-C31C-48B0-8CAA-4092F81AFCE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA01E1CB-C31C-48B0-8CAA-4092F81AFCE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4E23508-4D83-4C68-B995-EDF868D32809}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4E23508-4D83-4C68-B995-EDF868D32809}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4E23508-4D83-4C68-B995-EDF868D32809}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4E23508-4D83-4C68-B995-EDF868D32809}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5FA9365D-9537-4E84-95B4-5F8825D226BD} = {2D815E17-7D98-4596-9ED8-1247D833F92F}
+		{3F9EFEE4-5772-48F5-AE5D-8DD9E90B71B3} = {30E0D391-2F48-4C2B-ADAA-1E8D1200C88B}
+		{AA01E1CB-C31C-48B0-8CAA-4092F81AFCE0} = {30E0D391-2F48-4C2B-ADAA-1E8D1200C88B}
+		{E4E23508-4D83-4C68-B995-EDF868D32809} = {91CB078B-0991-4576-B863-B256942624E8}
+	EndGlobalSection
+EndGlobal
