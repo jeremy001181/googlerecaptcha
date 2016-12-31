@@ -74,7 +74,7 @@ namespace GoogleRecaptcha.AcceptanceTests
 #line 7
 this.ScenarioSetup(scenarioInfo);
 #line 8
- testRunner.Given("I received", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given("I have a test server", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 9
  testRunner.And("I have entered 70 into the calculator", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 10

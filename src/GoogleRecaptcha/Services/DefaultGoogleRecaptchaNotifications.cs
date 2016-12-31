@@ -10,27 +10,33 @@ namespace GoogleRecaptcha.Services
         {
             InvalidInputResponseNotification = DefaultInvalidInputResponseNotification;
             MissingInputResponseNotification = DefaultMissingInputResponseNotification;
+            ValidInputResponseNotification = DefaultValidInputResponseNotification;
+            InvalidInputSecretNotification = DefaultInvalidInputSecretNotification;
         }
 
-        private Task DefaultInvalidInputResponseNotification(IOwinContext context, GoogleRecaptchaResponse googleRecaptchaResponse)
+        private async Task DefaultInvalidInputSecretNotification(IOwinContext arg1, GoogleRecaptchaResponse arg2)
         {
-            throw new NotImplementedException();
+            await Task.FromResult(0);
         }
 
-        private Task DefaultMissingInputResponseNotification(IOwinContext context, GoogleRecaptchaResponse googleRecaptchaResponse)
+        private async Task DefaultValidInputResponseNotification(IOwinContext context, GoogleRecaptchaResponse googleRecaptchaResponse)
         {
-            throw new NotImplementedException();
+            await Task.FromResult(0);
+        }
+
+        private async Task DefaultInvalidInputResponseNotification(IOwinContext context, GoogleRecaptchaResponse googleRecaptchaResponse)
+        {
+            await Task.FromResult(0);
+        }
+
+        private async Task DefaultMissingInputResponseNotification(IOwinContext context, GoogleRecaptchaResponse googleRecaptchaResponse)
+        {
+            await Task.FromResult(0);
         }
 
         public Func<IOwinContext, GoogleRecaptchaResponse, Task> InvalidInputResponseNotification { get; set; }
         public Func<IOwinContext, GoogleRecaptchaResponse, Task> MissingInputResponseNotification { get; set; }
         public Func<IOwinContext, GoogleRecaptchaResponse, Task> ValidInputResponseNotification { get; set; }
-    }
-
-    public interface IGoogleRecaptchaNotifications
-    {
-        Func<IOwinContext, GoogleRecaptchaResponse, Task> InvalidInputResponseNotification { get; set; }
-        Func<IOwinContext, GoogleRecaptchaResponse, Task> MissingInputResponseNotification { get; set; }
-        Func<IOwinContext, GoogleRecaptchaResponse, Task> ValidInputResponseNotification { get; set; }
+        public Func<IOwinContext, GoogleRecaptchaResponse, Task> InvalidInputSecretNotification { get; set; }
     }
 }

@@ -16,25 +16,28 @@ namespace GoogleRecaptcha
         public GoogleRecaptchaMiddleware(OwinMiddleware next, GoogleRecaptchaMiddlewareOption option) : base(next)
         {
             SimpleContract.ThrowWhen<ArgumentNullException>(option == null, "option");
-            SimpleContract.ThrowWhen<ArgumentException>(string.IsNullOrEmpty(option.SiteKey), "siteKey is null or empty");
             SimpleContract.ThrowWhen<ArgumentException>(string.IsNullOrEmpty(option.SiteSecret), "siteSecret is null or empty");
             
             if (option.BackchannelHttpClient == null)
             {
-                option.BackchannelHttpClient = new DefaultBackchannelHttpClient
+                option.BackchannelHttpClient = new DefaultBackchannelHttpClient(new HttpClient(new HttpClientHandler()
                 {
+                    UseProxy = option.Proxy != null,
                     Proxy = option.Proxy
-                };
+                })
+                {
+                    Timeout = new TimeSpan(0,0,0, option.Timeout ?? 30)
+                });
             }
 
-            if (option.RequestConstructor == null)
+            if (option.GoogleRecaptchaRequestConstructor == null)
             {
-                option.RequestConstructor = DefaultGoogleRecaptchaRequestConstructor;
+                option.GoogleRecaptchaRequestConstructor = DefaultGoogleRecaptchaRequestConstructor;
             }
 
-            if (option.ResponseHandler == null)
+            if (option.GoogleRecaptchaResponseHandler == null)
             {
-                option.ResponseHandler = new DefaultGoogleRecaptchaResponseHandler();
+                option.GoogleRecaptchaResponseHandler = new DefaultGoogleRecaptchaResponseHandler();
             }
 
             if (option.ShouldContinue == null)
@@ -42,7 +45,18 @@ namespace GoogleRecaptcha
                 option.ShouldContinue = DefaultShouldContinueHandler;
             }
 
+            if (option.Enable == null)
+            {
+                option.Enable = DefaultEnabler;
+            }
+
             this.option = option;
+        }
+
+        private async Task<bool> DefaultEnabler(IOwinContext context)
+        {
+            var isEnabled = context.Request.Method.Equals("post", StringComparison.OrdinalIgnoreCase);
+            return await Task.FromResult(isEnabled);
         }
 
         private async Task<GoogleRecaptchaRequest> DefaultGoogleRecaptchaRequestConstructor(IOwinContext context)
@@ -62,15 +76,20 @@ namespace GoogleRecaptcha
 
         public async override Task Invoke(IOwinContext context)
         {
+            if (!await option.Enable(context))
+            {
+                await Next.Invoke(context);
+                return;
+            }
+
             var httpClient = option.BackchannelHttpClient;
             
-            var request = await option.RequestConstructor(context);
+            var request = await option.GoogleRecaptchaRequestConstructor(context);
 
-            var data = string.Format(
-                "secret={0}&remoteip={1}&response={2}",
-                                    HttpUtility.UrlEncode(option.SiteSecret),
-                                    HttpUtility.UrlEncode(request.RemoteIp),
-                                    HttpUtility.UrlEncode(request.UserResponseToken));
+            var data = string.Format("secret={0}&remoteip={1}&response={2}",
+                HttpUtility.UrlEncode(option.SiteSecret),
+                HttpUtility.UrlEncode(request.RemoteIp),
+                HttpUtility.UrlEncode(request.UserResponseToken));
 
             var httpContent = new StringContent(data, Encoding.UTF8 ,"application/x-www-form-urlencoded");
 
@@ -79,11 +98,11 @@ namespace GoogleRecaptcha
             using (var response = await httpClient.PostAsync(option.TokenVerificationEndpoint,  httpContent))
             {
                 response.EnsureSuccessStatusCode();
-
+                
                 result = await response.Content.ReadAsJsonObjectAsync<GoogleRecaptchaResponse>();
             }
             
-            await option.ResponseHandler.Handle(context, result);
+            await option.GoogleRecaptchaResponseHandler.Handle(context, result);
 
             if (await option.ShouldContinue(result))
             {
