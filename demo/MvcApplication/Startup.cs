@@ -1,7 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Configuration;
+using System.Threading.Tasks;
 using GoogleRecaptcha;
 using GoogleRecaptcha.Services;
 using Microsoft.Owin;
+using Microsoft.Owin.FileSystems;
+using Microsoft.Owin.StaticFiles;
 using Owin;
 
 [assembly: OwinStartup(typeof(MvcApplication.Startup))]
@@ -12,30 +15,33 @@ namespace MvcApplication
     {
         public void Configuration(IAppBuilder app)
         {
-            app.Run(context =>
+            const string rootFolder = ".";
+            var fileSystem = new PhysicalFileSystem(rootFolder);
+            var options = new FileServerOptions
             {
-                context.Response.ContentType = "text/plain";
-                
+                EnableDefaultFiles = true,
+                FileSystem = fileSystem
+            };
+
+            app.UseFileServer(options);
+
+            app.Map("/protected", appBuilder =>
+            {
                 var option = new GoogleRecaptchaMiddlewareOption()
                 {
-                    Timeout = 60,
-                    Notifications = new DefaultGoogleRecaptchaNotifications()
-                    {
-                        MissingInputResponseNotification = async (ctx, recaptchaResponse) =>
-                        {
-                            await Task.FromResult(0);
-                        },
-                        InvalidInputResponseNotification = async (ctx, recaptchaResponse) =>
-                        {
-                            await Task.FromResult(0);
-                        }
-                    }
+                    SiteSecret = ConfigurationManager.AppSettings["google.siteSecret"],
                 };
-                
-                app.UseGoogleRecaptchaMiddleware(option);
 
-                return context.Response.WriteAsync("Hello, world.");
+                appBuilder.UseGoogleRecaptchaMiddleware(option);
+
+                appBuilder.Run(async context =>
+                {
+                    context.Response.ContentType = "text/html";
+                    await context.Response.WriteAsync("<a href='/index.html'>Go back</a>");
+                });
+                
             });
+
         }
     }
 }

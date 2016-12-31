@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -8,12 +9,10 @@ namespace GoogleRecaptcha.Services
     {
         private readonly HttpClient httpClient;
 
-        internal DefaultBackchannelHttpClient()
+        internal DefaultBackchannelHttpClient(HttpClient httpClient)
         {
-            this.httpClient = new HttpClient();
+            this.httpClient = httpClient;
         }
-
-        internal IWebProxy Proxy { get; set; }
 
         public async Task<HttpResponseMessage> PostAsync(string uri, HttpContent content)
         {

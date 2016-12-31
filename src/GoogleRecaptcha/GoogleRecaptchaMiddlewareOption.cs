@@ -13,7 +13,9 @@ namespace GoogleRecaptcha
             TokenVerificationEndpoint = "https://www.google.com/recaptcha/api/siteverify";
         }
 
-        public string SiteKey { get; set; }
+        /// <summary>
+        /// Required. site secret.
+        /// </summary>
         public string SiteSecret { get; set; }
 
         /// <summary>
@@ -21,11 +23,25 @@ namespace GoogleRecaptcha
         /// </summary>
         public string TokenVerificationEndpoint { get; set; }
 
-        public int Timeout { get; set; }
-        public IGoogleRecaptchaNotifications Notifications { get; set; }
+        /// <summary>
+        /// Optional. Allow customize timeout (seconds) for built-in default backchannel HttpClient, default to 30 seconds.
+        /// </summary>
+        public int? Timeout { get; set; }
+        
+        /// <summary>
+        /// Optional. Allow configure proxy for built-in default backchannel HttpClient.
+        /// </summary>
         public IWebProxy Proxy { get; set; }
+
+        /// <summary>
+        /// Optional. Allow customize how to interact with Google reCAPTCHA API endpoint.
+        /// </summary> 
         public IHttpClient BackchannelHttpClient { get; set; }
-        public IGoogleRecaptchaResponseHandler ResponseHandler { get; set; }
+
+        /// <summary>
+        /// Optional. Allow customize how to handle Google recaptcha verfication response.
+        /// </summary>
+        public IGoogleRecaptchaResponseHandler GoogleRecaptchaResponseHandler { get; set; }
 
         /// <summary>
         /// Optional. Indicates if it should move to next middleware. If not specified, it only moves to next middleware when google recaptcha response is success.
@@ -35,6 +51,11 @@ namespace GoogleRecaptcha
         /// <summary>
         /// Optional. Allows customize how to extract goolgle recaptcha token and remote ip.
         /// </summary>
-        public Func<IOwinContext, Task<GoogleRecaptchaRequest>> RequestConstructor { get; set; }
+        public Func<IOwinContext, Task<GoogleRecaptchaRequest>> GoogleRecaptchaRequestConstructor { get; set; }
+
+        /// <summary>
+        /// Optional. Allow enable or disable google recaptcha verification in fly, default to be enabled if it is a POST request
+        /// </summary>
+        public Func<IOwinContext, Task<bool>> Enable { get; set; }
     }
 }

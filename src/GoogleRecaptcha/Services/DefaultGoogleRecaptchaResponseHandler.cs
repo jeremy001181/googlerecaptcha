@@ -10,17 +10,31 @@ namespace GoogleRecaptcha.Services
             if (!result.Success)
             {
                 context.Response.StatusCode = 401;
-                
-                await context.Response.WriteAsync("rejected");
             }
-            else
+
+            if (Notifications != null)
             {
+                if (result.Success)
+                {
+                    await Notifications.ValidInputResponseNotification(context, result);
+                }
+                else
+                {
+                    foreach (var errorCode in result.ErrorCodes)
+                    {
+                        if (errorCode == "invalid-input-secret" && Notifications.InvalidInputSecretNotification != null)
+                            await Notifications.InvalidInputSecretNotification(context, result);
 
-                context.Response.StatusCode = 200;
+                        if (errorCode == "missing-input-response" && Notifications.MissingInputResponseNotification != null)
+                            await Notifications.MissingInputResponseNotification(context, result);
 
-                await context.Response.WriteAsync("success");
-                //await option.Notifications.InvalidInputResponseNotification(context, result);
+                        if (errorCode == "invalid-input-response" && Notifications.InvalidInputResponseNotification != null)
+                            await Notifications.InvalidInputResponseNotification(context, result);
+                    }
+                }
             }
         }
+
+        public IGoogleRecaptchaNotifications Notifications { get; set; }
     }
 }

@@ -4,14 +4,17 @@
     <id>GoogleRecaptchaOwinMiddleware</id>
     <version>1.0.0</version>
     <title>Google Recaptcha Owin Middleware</title>
-    <authors>Zeus</authors>
-    <owners>Zeus</owners>
-    <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>
-    <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
-    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
+    <authors>Zhongming Chen</authors>
+    <owners>Zhongming Chen</owners>
+    <projectUrl>https://github.com/jeremy001181/googlerecaptcha</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <dependencies>
+      <dependency id="Microsoft.Owin" version="3.0.1" />
+      <dependency id="Newtonsoft.Json" version="9.0.1" />
+      <dependency id="Owin" version="1.0.0" />
+    </dependencies>
     <description>Google Recaptcha Owin Middleware</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <releaseNotes>First release.</releaseNotes>
     <copyright>Copyright 2016</copyright>
   </metadata>
 </package>
