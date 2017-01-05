@@ -37,6 +37,7 @@ namespace MvcApplication
                 appBuilder.Run(async context =>
                 {
                     context.Response.ContentType = "text/html";
+                    await context.Response.WriteAsync("<p id='message'>Success</p>");
                     await context.Response.WriteAsync("<a href='/index.html'>Go back</a>");
                 });
                 
