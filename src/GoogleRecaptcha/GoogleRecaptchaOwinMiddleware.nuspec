@@ -8,11 +8,6 @@
     <owners>Zhongming Chen</owners>
     <projectUrl>https://github.com/jeremy001181/googlerecaptcha</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <dependencies>
-      <dependency id="Microsoft.Owin" version="3.0.1" />
-      <dependency id="Newtonsoft.Json" version="9.0.1" />
-      <dependency id="Owin" version="1.0.0" />
-    </dependencies>
     <description>Google Recaptcha Owin Middleware</description>
     <releaseNotes>First release.</releaseNotes>
     <copyright>Copyright 2016</copyright>
