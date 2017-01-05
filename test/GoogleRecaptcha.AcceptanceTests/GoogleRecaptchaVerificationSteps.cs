@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using GoogleRecaptcha.AcceptanceTests.PageObjects;
 using NUnit.Framework;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using TechTalk.SpecFlow;
 
@@ -12,10 +13,12 @@ namespace GoogleRecaptcha.AcceptanceTests
     public class GoogleRecaptchaVerificationSteps
     {
         private RecaptchaTestPage _testPage;
+        private ProtectedPage _protectedPage;
 
-        public GoogleRecaptchaVerificationSteps()
+        public GoogleRecaptchaVerificationSteps(IWebDriver driver/*RecaptchaTestPage testPage, ProtectedPage protectedPage*/)
         {
-            _testPage = new RecaptchaTestPage(new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)));
+            _testPage = new RecaptchaTestPage(driver);
+            _protectedPage = new ProtectedPage(driver);
         }
 
         [Given(@"I am on google recaptcha test page")]
@@ -25,29 +28,25 @@ namespace GoogleRecaptcha.AcceptanceTests
             _testPage.EnsurePageLoaded();
         }
 
-        [Given(@"I tick the recaptcha checkbox")]
-        public void GivenITickTheRecaptchaCheckbox()
+        [When(@"I click on submit")]
+        public void WhenIClickOnSubmit()
+        {
+            _testPage.Submit.Click();
+        }
+
+        [Given(@"I receive recaptcha token by clicking tickbox")]
+        public void GivenIReceiveRecaptchaTokenByClickingTickbox()
         {
             _testPage.TickRecaptchaCheckBox();
         }
 
-        [When(@"I click on submit")]
-        public void WhenIClickOnSubmit()
-        {
-            ScenarioContext.Current.Pending();
-        }
-
-        [Then(@"I should receive recaptcha token")]
-        public void ThenIShouldReceiveRecaptchaToken()
-        {
-            var ticked = _testPage.IsGoogleRecaptchaTicked();
-            Assert.IsTrue(ticked);
-        }
 
         [Then(@"I should be redirected to protected page with success")]
         public void ThenIShouldBeRedirectedToProtectedPageWithSuccess()
         {
-            ScenarioContext.Current.Pending();
+            _protectedPage.EnsurePageLoaded();
+
+            Assert.IsTrue(_protectedPage.IsSuccess);
         }
     }
 }

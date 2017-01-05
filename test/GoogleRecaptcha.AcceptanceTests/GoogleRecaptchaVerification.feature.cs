@@ -75,12 +75,10 @@ this.ScenarioSetup(scenarioInfo);
 #line 5
  testRunner.Given("I am on google recaptcha test page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 6
- testRunner.And("I tick the recaptcha checkbox", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+ testRunner.And("I receive recaptcha token by clicking tickbox", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 7
- testRunner.Then("I should receive recaptcha token", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line 8
  testRunner.When("I click on submit", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line 9
+#line 8
  testRunner.Then("I should be redirected to protected page with success", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();
