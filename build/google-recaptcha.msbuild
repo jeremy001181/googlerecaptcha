@@ -33,7 +33,7 @@
     <MSBuild Projects="@(AppProjFiles)" Targets="Rebuild" Properties="OutDir=%(BuildArtifactsDir.FullPath);Configuration=$(Configuration);SolutionDir=$(SolutionDir)" />
   </Target>
   <Target Name="Package">
-    <Exec WorkingDirectory="%(NugetExeDir.FullPath)" Command="nuget.exe pack ..\src\GoogleRecaptcha\GoogleRecaptcha.csproj -Build -OutputDirectory ..\artifacts\packages" />
+    <Exec WorkingDirectory="%(NugetExeDir.FullPath)" Command="nuget.exe pack ..\src\GoogleRecaptcha\GoogleRecaptchaOwinMiddleware.nuspec -Build -OutputDirectory ..\artifacts\packages" />
   </Target>
   <Target Name="Publish">
     <Exec WorkingDirectory="%(ScriptsDir.FullPath)" Command="powershell -file .\publish.ps1" />
