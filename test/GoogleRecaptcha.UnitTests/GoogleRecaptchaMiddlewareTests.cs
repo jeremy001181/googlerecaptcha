@@ -71,6 +71,7 @@ namespace GoogleRecaptcha.UnitTests
                             InvalidInputSecretNotification = async (c, r) =>
                             {
                                 hasCalledInvalidInputSecretNotification = true;
+                                await Task.FromResult(0);
                             }
                         }
                     }
