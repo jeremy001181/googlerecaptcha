@@ -63,7 +63,7 @@
     <Compile Include="Services\DefaultBackchannelHttpClient.cs" />
     <Compile Include="Extensions\HttpResponseMessageExtensions.cs" />
     <Compile Include="GoogleRecaptchaMiddleware.cs" />
-    <Compile Include="GoogleRecaptchaMiddlewareExtensions.cs" />
+    <Compile Include="Extensions\GoogleRecaptchaMiddlewareExtensions.cs" />
     <Compile Include="GoogleRecaptchaMiddlewareOption.cs" />
     <Compile Include="Services\DefaultGoogleRecaptchaNotifications.cs" />
     <Compile Include="GoogleRecaptchaResponse.cs" />
