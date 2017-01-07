@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Threading.Tasks;
 using GoogleRecaptcha;
+using GoogleRecaptcha.Extensions;
 using GoogleRecaptcha.Services;
 using Microsoft.Owin;
 using Microsoft.Owin.FileSystems;
