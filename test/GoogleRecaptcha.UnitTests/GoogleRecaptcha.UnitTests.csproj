@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="GoogleRecaptchaMiddlewareTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DefaultGoogleRecaptchaResponseHandlerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\GoogleRecaptcha\GoogleRecaptcha.csproj">

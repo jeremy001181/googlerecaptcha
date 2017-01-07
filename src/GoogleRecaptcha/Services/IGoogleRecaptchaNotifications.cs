@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using GoogleRecaptcha.Models;
 using Microsoft.Owin;
 
 namespace GoogleRecaptcha.Services
@@ -10,5 +11,6 @@ namespace GoogleRecaptcha.Services
         Func<IOwinContext, GoogleRecaptchaResponse, Task> MissingInputResponseNotification { get; set; }
         Func<IOwinContext, GoogleRecaptchaResponse, Task> ValidInputResponseNotification { get; set; }
         Func<IOwinContext, GoogleRecaptchaResponse, Task> InvalidInputSecretNotification { get; set; }
+        Func<IOwinContext, GoogleRecaptchaResponse, Task> FailedResponseNotification { get; set; }
     }
 }

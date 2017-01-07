@@ -65,15 +65,12 @@ namespace GoogleRecaptcha.UnitTests
                 app.UseGoogleRecaptchaMiddleware(new GoogleRecaptchaMiddlewareOption()
                 {
                     SiteSecret = "test",
-                    GoogleRecaptchaResponseHandler = new DefaultGoogleRecaptchaResponseHandler()
+                    Notifications = new DefaultGoogleRecaptchaNotifications()
                     {
-                        Notifications = new DefaultGoogleRecaptchaNotifications()
+                        InvalidInputSecretNotification = async (c, r) =>
                         {
-                            InvalidInputSecretNotification = async (c, r) =>
-                            {
-                                hasCalledInvalidInputSecretNotification = true;
-                                await Task.FromResult(0);
-                            }
+                            hasCalledInvalidInputSecretNotification = true;
+                            await Task.FromResult(0);
                         }
                     }
                 });

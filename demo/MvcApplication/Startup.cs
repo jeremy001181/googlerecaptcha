@@ -31,6 +31,14 @@ namespace MvcApplication
                 var option = new GoogleRecaptchaMiddlewareOption()
                 {
                     SiteSecret = ConfigurationManager.AppSettings["google.siteSecret"],
+                    Notifications = new DefaultGoogleRecaptchaNotifications
+                    {
+                        FailedResponseNotification = async (ctx, response) =>
+                        {
+                            await ctx.Response.WriteAsync(response.ReasonPhase);
+                            
+                        }
+                    }
                 };
 
                 appBuilder.UseGoogleRecaptchaMiddleware(option);

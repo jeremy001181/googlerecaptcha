@@ -1,4 +1,4 @@
-﻿namespace GoogleRecaptcha
+﻿namespace GoogleRecaptcha.Models
 {
     public class GoogleRecaptchaRequest
     {
