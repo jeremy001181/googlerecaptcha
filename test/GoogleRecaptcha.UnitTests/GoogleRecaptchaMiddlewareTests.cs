@@ -90,5 +90,43 @@ namespace GoogleRecaptcha.UnitTests
                 }
             }
         }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task Shoud_continue_to_next_middleware_based_on_return_configured_value(bool shouldContinue)
+        {
+            using (var server = TestServer.Create(app =>
+            {
+                app.UseGoogleRecaptchaMiddleware(new GoogleRecaptchaMiddlewareOption()
+                {
+                    SiteSecret = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe",
+                    ShouldContinue = async response =>
+                    {
+                        return await Task.FromResult(shouldContinue);
+                    },
+                });
+
+                app.Run(async context =>
+                {
+                    await context.Response.WriteAsync("OK");
+                });
+            }))
+            {
+                using (var client = new HttpClient(server.Handler))
+                {
+                    var content = new StringContent("g-recaptcha-response=test", Encoding.UTF8, "application/x-www-form-urlencoded");
+                    var response = await client.PostAsync("http://testserver/api/values", content);
+                    var result = await response.Content.ReadAsStringAsync();
+                    if (shouldContinue)
+                    {
+                        Assert.AreEqual(result, "OK");
+                    }
+                    else
+                    {
+                        Assert.AreNotEqual(result, "OK");
+                    }
+                }
+            }
+        }
     }
 }
