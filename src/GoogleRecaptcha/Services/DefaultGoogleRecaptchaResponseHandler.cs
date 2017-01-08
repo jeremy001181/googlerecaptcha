@@ -13,6 +13,7 @@ namespace GoogleRecaptcha.Services
                 context.Response.StatusCode = 401;
             }
 
+            // Followings are all about notifications
             if (Notifications == null)
             {
                 return;
@@ -31,7 +32,7 @@ namespace GoogleRecaptcha.Services
             if (result.ResponseContent.Success)
             {
                 // Google verfication passed
-                if (Notifications != null && Notifications.ValidInputResponseNotification != null)
+                if (Notifications.ValidInputResponseNotification != null)
                 {
                     await Notifications.ValidInputResponseNotification(context, result);
                 }
