@@ -1,9 +1,9 @@
 using System;
 using Newtonsoft.Json;
 
-namespace GoogleRecaptcha
+namespace GoogleRecaptcha.Models
 {
-    public class GoogleRecaptchaResponse
+    public class GoogleRecaptchaResponseContent
     {
         public bool Success { get; set; }
 
