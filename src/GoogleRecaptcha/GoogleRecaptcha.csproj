@@ -56,7 +56,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\IOwinRequestExtensions.cs" />
-    <Compile Include="GoogleRecaptchaRequest.cs" />
+    <Compile Include="Models\GoogleRecaptchaRequest.cs" />
+    <Compile Include="Models\GoogleRecaptchaResponseContent.cs" />
     <Compile Include="Services\IGoogleRecaptchaNotifications.cs" />
     <Compile Include="Services\IGoogleRecaptchaResponseHandler.cs" />
     <Compile Include="Services\DefaultGoogleRecaptchaResponseHandler.cs" />
@@ -66,7 +67,7 @@
     <Compile Include="Extensions\GoogleRecaptchaMiddlewareExtensions.cs" />
     <Compile Include="GoogleRecaptchaMiddlewareOption.cs" />
     <Compile Include="Services\DefaultGoogleRecaptchaNotifications.cs" />
-    <Compile Include="GoogleRecaptchaResponse.cs" />
+    <Compile Include="Models\GoogleRecaptchaResponse.cs" />
     <Compile Include="Services\IHttpClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleContract.cs" />

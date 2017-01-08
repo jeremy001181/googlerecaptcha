@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using GoogleRecaptcha.Extensions;
+using GoogleRecaptcha.Models;
 using GoogleRecaptcha.Services;
 using Microsoft.Owin;
 
@@ -37,7 +38,10 @@ namespace GoogleRecaptcha
 
             if (option.GoogleRecaptchaResponseHandler == null)
             {
-                option.GoogleRecaptchaResponseHandler = new DefaultGoogleRecaptchaResponseHandler();
+                option.GoogleRecaptchaResponseHandler = new DefaultGoogleRecaptchaResponseHandler
+                {
+                    Notifications = option.Notifications
+                };
             }
 
             if (option.ShouldContinue == null)
@@ -55,7 +59,7 @@ namespace GoogleRecaptcha
 
         private async Task<bool> DefaultEnabler(IOwinContext context)
         {
-            var isEnabled = context.Request.Method.Equals("post", StringComparison.OrdinalIgnoreCase);
+            var isEnabled = context.Request.Method.Equals("POST");
             return await Task.FromResult(isEnabled);
         }
 
@@ -71,7 +75,7 @@ namespace GoogleRecaptcha
 
         private async Task<bool> DefaultShouldContinueHandler(GoogleRecaptchaResponse googleRecaptchaResponse)
         {
-            return await Task.FromResult(googleRecaptchaResponse.Success);
+            return await Task.FromResult(googleRecaptchaResponse.IsSuccessStatusCode && googleRecaptchaResponse.ResponseContent.Success);
         }
 
         public async override Task Invoke(IOwinContext context)
@@ -93,18 +97,23 @@ namespace GoogleRecaptcha
 
             var httpContent = new StringContent(data, Encoding.UTF8 ,"application/x-www-form-urlencoded");
 
-            GoogleRecaptchaResponse result;
+            var googleRecaptchaResponse = new GoogleRecaptchaResponse();
 
             using (var response = await httpClient.PostAsync(option.TokenVerificationEndpoint,  httpContent))
             {
-                response.EnsureSuccessStatusCode();
-                
-                result = await response.Content.ReadAsJsonObjectAsync<GoogleRecaptchaResponse>();
+                googleRecaptchaResponse.StatusCode = response.StatusCode;
+                googleRecaptchaResponse.ReasonPhase = response.ReasonPhrase;
+                googleRecaptchaResponse.IsSuccessStatusCode = response.IsSuccessStatusCode;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    googleRecaptchaResponse.ResponseContent = await response.Content.ReadAsJsonObjectAsync<GoogleRecaptchaResponseContent>();
+                }
             }
             
-            await option.GoogleRecaptchaResponseHandler.Handle(context, result);
+            await option.GoogleRecaptchaResponseHandler.Handle(context, googleRecaptchaResponse);
 
-            if (await option.ShouldContinue(result))
+            if (await option.ShouldContinue(googleRecaptchaResponse))
             {
                 await Next.Invoke(context);
             }
