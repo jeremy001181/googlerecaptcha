@@ -18,5 +18,6 @@
   </metadata>
   <files>
     <file src="bin\*\*.dll" target="lib\net45" />
+    <file src="bin\*\*.xml" target="lib\net45" />
   </files>
 </package>
