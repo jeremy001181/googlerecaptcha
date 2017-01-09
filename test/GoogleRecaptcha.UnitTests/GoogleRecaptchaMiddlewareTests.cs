@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using GoogleRecaptcha.Extensions;
 using GoogleRecaptcha.Services;
 using Microsoft.Owin;
 using Microsoft.Owin.Testing;
@@ -64,15 +65,12 @@ namespace GoogleRecaptcha.UnitTests
                 app.UseGoogleRecaptchaMiddleware(new GoogleRecaptchaMiddlewareOption()
                 {
                     SiteSecret = "test",
-                    GoogleRecaptchaResponseHandler = new DefaultGoogleRecaptchaResponseHandler()
+                    Notifications = new DefaultGoogleRecaptchaNotifications()
                     {
-                        Notifications = new DefaultGoogleRecaptchaNotifications()
+                        InvalidInputSecretNotification = async (c, r) =>
                         {
-                            InvalidInputSecretNotification = async (c, r) =>
-                            {
-                                hasCalledInvalidInputSecretNotification = true;
-                                await Task.FromResult(0);
-                            }
+                            hasCalledInvalidInputSecretNotification = true;
+                            await Task.FromResult(0);
                         }
                     }
                 });
@@ -89,6 +87,44 @@ namespace GoogleRecaptcha.UnitTests
                     var response = await client.PostAsync("http://testserver/api/values", content);
 
                     Assert.IsTrue(hasCalledInvalidInputSecretNotification);
+                }
+            }
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public async Task Shoud_continue_to_next_middleware_based_on_return_configured_value(bool shouldContinue)
+        {
+            using (var server = TestServer.Create(app =>
+            {
+                app.UseGoogleRecaptchaMiddleware(new GoogleRecaptchaMiddlewareOption()
+                {
+                    SiteSecret = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe",
+                    ShouldContinue = async response =>
+                    {
+                        return await Task.FromResult(shouldContinue);
+                    },
+                });
+
+                app.Run(async context =>
+                {
+                    await context.Response.WriteAsync("OK");
+                });
+            }))
+            {
+                using (var client = new HttpClient(server.Handler))
+                {
+                    var content = new StringContent("g-recaptcha-response=test", Encoding.UTF8, "application/x-www-form-urlencoded");
+                    var response = await client.PostAsync("http://testserver/api/values", content);
+                    var result = await response.Content.ReadAsStringAsync();
+                    if (shouldContinue)
+                    {
+                        Assert.AreEqual(result, "OK");
+                    }
+                    else
+                    {
+                        Assert.AreNotEqual(result, "OK");
+                    }
                 }
             }
         }

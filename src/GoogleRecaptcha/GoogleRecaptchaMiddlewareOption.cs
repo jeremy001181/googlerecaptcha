@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using GoogleRecaptcha.Models;
 using GoogleRecaptcha.Services;
 using Microsoft.Owin;
 
@@ -57,5 +58,10 @@ namespace GoogleRecaptcha
         /// Optional. Allow enable or disable google recaptcha verification in fly, default to be enabled if it is a POST request
         /// </summary>
         public Func<IOwinContext, Task<bool>> Enable { get; set; }
+        
+        /// <summary>
+        /// Optional. Allow receive notifications from default google response handler
+        /// </summary>
+        public IGoogleRecaptchaNotifications Notifications { get; set; }
     }
 }

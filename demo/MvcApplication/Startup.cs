@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Threading.Tasks;
 using GoogleRecaptcha;
+using GoogleRecaptcha.Extensions;
 using GoogleRecaptcha.Services;
 using Microsoft.Owin;
 using Microsoft.Owin.FileSystems;
@@ -30,6 +31,14 @@ namespace MvcApplication
                 var option = new GoogleRecaptchaMiddlewareOption()
                 {
                     SiteSecret = ConfigurationManager.AppSettings["google.siteSecret"],
+                    Notifications = new DefaultGoogleRecaptchaNotifications
+                    {
+                        FailedResponseNotification = async (ctx, response) =>
+                        {
+                            await ctx.Response.WriteAsync(response.ReasonPhase);
+                            
+                        }
+                    }
                 };
 
                 appBuilder.UseGoogleRecaptchaMiddleware(option);
