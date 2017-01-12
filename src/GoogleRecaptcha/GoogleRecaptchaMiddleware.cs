@@ -38,10 +38,7 @@ namespace GoogleRecaptcha
 
             if (option.GoogleRecaptchaResponseHandler == null)
             {
-                option.GoogleRecaptchaResponseHandler = new DefaultGoogleRecaptchaResponseHandler
-                {
-                    Notifications = option.Notifications
-                };
+                option.GoogleRecaptchaResponseHandler = new DefaultGoogleRecaptchaResponseHandler(option.Notifications);
             }
 
             if (option.ShouldContinue == null)
@@ -111,7 +108,7 @@ namespace GoogleRecaptcha
                 }
             }
             
-            await option.GoogleRecaptchaResponseHandler.Handle(context, googleRecaptchaResponse);
+            await option.GoogleRecaptchaResponseHandler.HandleAsync(context, googleRecaptchaResponse);
 
             if (await option.ShouldContinue(googleRecaptchaResponse))
             {
