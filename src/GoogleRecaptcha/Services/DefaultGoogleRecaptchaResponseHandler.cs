@@ -25,7 +25,5 @@ namespace GoogleRecaptcha.Services
                 await notifications.PublishAsync(context, result);
             }
         }
-
-        public IGoogleRecaptchaNotifications Notifications { get; set; }
     }
 }
