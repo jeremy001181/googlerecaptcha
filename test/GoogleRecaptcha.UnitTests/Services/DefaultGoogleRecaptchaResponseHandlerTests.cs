@@ -17,19 +17,16 @@ namespace GoogleRecaptcha.UnitTests.Services
             bool actual = false;
             var contextMock = new Mock<IOwinContext>();
             contextMock.SetupGet(context => context.Response).Returns(Mock.Of<IOwinResponse>());
-            var handler = new DefaultGoogleRecaptchaResponseHandler()
-            {
-                Notifications = new DefaultGoogleRecaptchaNotifications()
+            var handler = new DefaultGoogleRecaptchaResponseHandler(new DefaultGoogleRecaptchaNotifications()
                 {
                     FailedResponseNotification = async (context, response) =>
                     {
                         actual = true;
                         await Task.FromResult(0);
                     }
-                }
-            };
+                });
 
-            await handler.Handle(contextMock.Object, new GoogleRecaptchaResponse()
+            await handler.HandleAsync(contextMock.Object, new GoogleRecaptchaResponse()
             {
                 IsSuccessStatusCode = false
             });

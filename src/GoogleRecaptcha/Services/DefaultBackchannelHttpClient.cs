@@ -1,5 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using GoogleRecaptcha.Extensions;
+using GoogleRecaptcha.Models;
 
 namespace GoogleRecaptcha.Services
 {
@@ -12,9 +14,37 @@ namespace GoogleRecaptcha.Services
             this.httpClient = httpClient;
         }
 
-        public async Task<HttpResponseMessage> PostAsync(string uri, HttpContent content)
+        public async Task<GoogleRecaptchaResponse> PostAsync(string uri, HttpContent content)
         {
-            return await httpClient.PostAsync(uri, content);
+            var googleRecaptchaResponse = new GoogleRecaptchaResponse();
+
+            try
+            {
+                using (var response = await httpClient.PostAsync(uri, content))
+                {
+                    googleRecaptchaResponse.StatusCode = response.StatusCode;
+                    googleRecaptchaResponse.ReasonPhase = response.ReasonPhrase;
+                    googleRecaptchaResponse.IsSuccessStatusCode = response.IsSuccessStatusCode;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        googleRecaptchaResponse.ResponseContent = await response.Content.ReadAsJsonObjectAsync<GoogleRecaptchaResponseContent>();
+                    }
+                }
+
+                return await Task.FromResult(googleRecaptchaResponse);
+            }
+            catch (HttpRequestException ex)
+            {
+                googleRecaptchaResponse.Exception = ex;
+            }
+            catch (TaskCanceledException ex)
+            {
+
+                googleRecaptchaResponse.Exception = ex;
+            }
+
+            return await Task.FromResult(googleRecaptchaResponse);
         }
     }
 }

@@ -12,5 +12,6 @@ namespace GoogleRecaptcha.Services
         Func<IOwinContext, GoogleRecaptchaResponse, Task> ValidInputResponseNotification { get; set; }
         Func<IOwinContext, GoogleRecaptchaResponse, Task> InvalidInputSecretNotification { get; set; }
         Func<IOwinContext, GoogleRecaptchaResponse, Task> FailedResponseNotification { get; set; }
+        Task PublishAsync(IOwinContext context, GoogleRecaptchaResponse result);
     }
 }

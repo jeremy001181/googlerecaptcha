@@ -6,6 +6,6 @@ namespace GoogleRecaptcha.Services
 {
     public interface IGoogleRecaptchaResponseHandler
     {
-        Task Handle(IOwinContext context, GoogleRecaptchaResponse result);
+        Task HandleAsync(IOwinContext context, GoogleRecaptchaResponse result);
     }
 }

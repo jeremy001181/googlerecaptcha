@@ -1,10 +1,11 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using GoogleRecaptcha.Models;
 
 namespace GoogleRecaptcha.Services
 {
     public interface IHttpClient
     {
-        Task<HttpResponseMessage> PostAsync(string uri, HttpContent content);
+        Task<GoogleRecaptchaResponse> PostAsync(string uri, HttpContent content);
     }
 }
