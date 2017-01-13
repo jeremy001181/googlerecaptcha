@@ -14,11 +14,12 @@ namespace GoogleRecaptcha
     {
         private readonly GoogleRecaptchaMiddlewareOption option;
 
-        public GoogleRecaptchaMiddleware(OwinMiddleware next, GoogleRecaptchaMiddlewareOption option) : base(next)
+        public GoogleRecaptchaMiddleware(OwinMiddleware next, GoogleRecaptchaMiddlewareOption option)
+            : base(next)
         {
             SimpleContract.ThrowWhen<ArgumentNullException>(option == null, "option");
             SimpleContract.ThrowWhen<ArgumentException>(string.IsNullOrEmpty(option.SiteSecret), "siteSecret is null or empty");
-            
+
             if (option.BackchannelHttpClient == null)
             {
                 option.BackchannelHttpClient = new DefaultBackchannelHttpClient(new HttpClient(new HttpClientHandler()
@@ -27,7 +28,7 @@ namespace GoogleRecaptcha
                     Proxy = option.Proxy
                 })
                 {
-                    Timeout = new TimeSpan(0,0,0, option.Timeout ?? 30)
+                    Timeout = new TimeSpan(0, 0, 0, option.Timeout ?? 30)
                 });
             }
 
@@ -84,7 +85,7 @@ namespace GoogleRecaptcha
             }
 
             var httpClient = option.BackchannelHttpClient;
-            
+
             var request = await option.GoogleRecaptchaRequestConstructor(context);
 
             var data = string.Format("secret={0}&remoteip={1}&response={2}",
@@ -92,21 +93,9 @@ namespace GoogleRecaptcha
                 HttpUtility.UrlEncode(request.RemoteIp),
                 HttpUtility.UrlEncode(request.UserResponseToken));
 
-            var httpContent = new StringContent(data, Encoding.UTF8 ,"application/x-www-form-urlencoded");
+            var httpContent = new StringContent(data, Encoding.UTF8, "application/x-www-form-urlencoded");
 
-            var googleRecaptchaResponse = new GoogleRecaptchaResponse();
-
-            using (var response = await httpClient.PostAsync(option.TokenVerificationEndpoint,  httpContent))
-            {
-                googleRecaptchaResponse.StatusCode = response.StatusCode;
-                googleRecaptchaResponse.ReasonPhase = response.ReasonPhrase;
-                googleRecaptchaResponse.IsSuccessStatusCode = response.IsSuccessStatusCode;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    googleRecaptchaResponse.ResponseContent = await response.Content.ReadAsJsonObjectAsync<GoogleRecaptchaResponseContent>();
-                }
-            }
+            var googleRecaptchaResponse = await httpClient.PostAsync(option.TokenVerificationEndpoint, httpContent);
             
             await option.GoogleRecaptchaResponseHandler.HandleAsync(context, googleRecaptchaResponse);
 

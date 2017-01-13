@@ -93,7 +93,7 @@ namespace GoogleRecaptcha.UnitTests
 
         [TestCase(true)]
         [TestCase(false)]
-        public async Task Shoud_continue_to_next_middleware_based_on_return_configured_value(bool shouldContinue)
+        public async Task Should_continue_to_next_middleware_based_on_return_configured_value(bool shouldContinue)
         {
             using (var server = TestServer.Create(app =>
             {
