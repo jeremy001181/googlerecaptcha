@@ -40,6 +40,11 @@ namespace GoogleRecaptcha
         public IHttpClient BackchannelHttpClient { get; set; }
 
         /// <summary>
+        /// Optional. Preprocessing of Owin context prior to recatpcha response verification.
+        /// </summary>
+        public Func<IOwinContext, Task> OwinContextPreInvoke { get; set; }
+        
+        /// <summary>
         /// Optional. Allow customize how to handle Google recaptcha verfication response.
         /// </summary>
         public IGoogleRecaptchaResponseHandler GoogleRecaptchaResponseHandler { get; set; }

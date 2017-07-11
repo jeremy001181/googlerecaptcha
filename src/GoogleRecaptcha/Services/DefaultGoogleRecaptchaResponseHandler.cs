@@ -12,11 +12,6 @@ namespace GoogleRecaptcha.Services
         {
             this.notifications = notifications;
         }
-		
-		public Task OwinContextPreInvoke(IOwinContext context)
-        {
-            return Task.Run(() => { });
-        }
 
         public async Task HandleAsync(IOwinContext context, GoogleRecaptchaResponse result)
         {
