@@ -88,13 +88,13 @@ namespace GoogleRecaptcha
 
         public async override Task Invoke(IOwinContext context)
         {
+            await option.OwinContextPreInvoke(context);
+
             if (!await option.Enable(context))
             {
                 await Next.Invoke(context);
                 return;
             }
-
-            await option.OwinContextPreInvoke(context);
 
             var httpClient = option.BackchannelHttpClient;
 
