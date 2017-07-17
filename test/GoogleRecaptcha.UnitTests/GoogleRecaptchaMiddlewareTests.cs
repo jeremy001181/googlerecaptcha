@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using GoogleRecaptcha.Extensions;
+using GoogleRecaptcha.Models;
 using GoogleRecaptcha.Services;
 using Microsoft.Owin;
 using Microsoft.Owin.Testing;
@@ -25,15 +26,30 @@ namespace GoogleRecaptcha.UnitTests
                 SiteSecret = null
             }));
         }
-
+        
         [Test]
         public async Task Should_receive_unauthorized_when_google_recaptcha_response_token_is_invalid()
         {
+            var httpClientMock = new Mock<IHttpClient>();
+            httpClientMock
+                .Setup( client =>  client.PostAsync(It.IsAny<string>(), It.IsAny<StringContent>()))
+                .ReturnsAsync(() => new GoogleRecaptchaResponse
+                {
+                    IsSuccessStatusCode = true,
+                    ResponseContent = new GoogleRecaptchaResponseContent()
+                    {
+                        Success = false,
+                        ErrorCodes = new []{ "invalid-input-response" }
+                    }
+                });
+
+
             using (var server = TestServer.Create(app =>
             {
                 app.UseGoogleRecaptchaMiddleware(new GoogleRecaptchaMiddlewareOption()
                 {
                     SiteSecret = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe",
+                    BackchannelHttpClient = httpClientMock.Object
                 });
 
                 app.Run(async context =>
@@ -47,7 +63,7 @@ namespace GoogleRecaptcha.UnitTests
                     var content = new StringContent("g-recaptcha-response=test", Encoding.UTF8, "application/x-www-form-urlencoded");
                     var response = await client.PostAsync("http://testserver/api/values", content);
                     var result = await response.Content.ReadAsStringAsync();
-                    
+
                     Assert.AreNotEqual(result, "OK");
                     Assert.AreEqual(response.StatusCode, HttpStatusCode.Unauthorized);
                 }
