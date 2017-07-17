@@ -42,7 +42,7 @@ namespace GoogleRecaptcha
         /// <summary>
         /// Optional. Preprocessing of Owin context prior to recatpcha response verification.
         /// </summary>
-        public Func<IOwinContext, Task> OwinContextPreInvoke { get; set; }
+        public Func<IOwinContext, Task> OwinContextPreProcess { get; set; }
         
         /// <summary>
         /// Optional. Allow customize how to handle Google recaptcha verfication response.
