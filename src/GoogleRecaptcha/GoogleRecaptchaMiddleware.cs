@@ -60,9 +60,9 @@ namespace GoogleRecaptcha
             this.option = option;
         }
 
-        private Task DefaultOwinContextPreInvoke(IOwinContext arg)
+        private async Task DefaultOwinContextPreInvoke(IOwinContext arg)
         {
-            return Task.Run(() => { });
+            await Task.FromResult(0);
         }
 
         private async Task<bool> DefaultEnabler(IOwinContext context)
