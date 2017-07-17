@@ -32,6 +32,11 @@ namespace GoogleRecaptcha
                 });
             }
 
+            if (option.OwinContextPreProcess == null)
+            {
+                option.OwinContextPreProcess = DefaultOwinContextPreProcess;
+            }
+
             if (option.GoogleRecaptchaRequestConstructor == null)
             {
                 option.GoogleRecaptchaRequestConstructor = DefaultGoogleRecaptchaRequestConstructor;
@@ -53,6 +58,11 @@ namespace GoogleRecaptcha
             }
 
             this.option = option;
+        }
+
+        private async Task DefaultOwinContextPreProcess(IOwinContext arg)
+        {
+            await Task.FromResult(0);
         }
 
         private async Task<bool> DefaultEnabler(IOwinContext context)
@@ -78,6 +88,8 @@ namespace GoogleRecaptcha
 
         public async override Task Invoke(IOwinContext context)
         {
+            await option.OwinContextPreProcess(context);
+
             if (!await option.Enable(context))
             {
                 await Next.Invoke(context);
@@ -96,7 +108,7 @@ namespace GoogleRecaptcha
             var httpContent = new StringContent(data, Encoding.UTF8, "application/x-www-form-urlencoded");
 
             var googleRecaptchaResponse = await httpClient.PostAsync(option.TokenVerificationEndpoint, httpContent);
-            
+
             await option.GoogleRecaptchaResponseHandler.HandleAsync(context, googleRecaptchaResponse);
 
             if (await option.ShouldContinue(googleRecaptchaResponse))
